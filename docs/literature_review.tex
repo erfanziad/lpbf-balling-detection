@@ -1,0 +1,260 @@
+% ══════════════════════════════════════════════════════════════════
+% LITERATURE REVIEW SECTION
+% Insert after \section{Introduction} in balling_paper.tex
+% ══════════════════════════════════════════════════════════════════
+
+\section{Related Work}
+
+\subsection{Balling Defect Formation Mechanisms}
+
+Balling in LPBF arises from the competition between surface
+tension and wetting forces along the melt track. The
+Plateau--Rayleigh instability — the tendency of a liquid
+cylinder to break into droplets to minimize surface energy —
+is the dominant physical mechanism when the melt pool is
+elongated relative to its diameter and solidification is slow
+relative to the instability growth rate.
+\citet{li2021phase} demonstrated through phase-field modeling
+that fast solidification and substrate wettability both
+counteract the balling effect, while high scan speed increases
+the aspect ratio of the melt pool and promotes instability.
+\citet{zhang2021understanding} applied Rayleigh--Plateau theory
+directly to LPBF single tracks, showing that normalized enthalpy
+determines whether a track is initially unstable and that dwell
+time governs whether instability growth reaches detectable
+amplitude. \citet{zoller2023numerical} used smoothed-particle
+hydrodynamics to show that Marangoni and capillary forces drive
+melt accumulation in the track tail region, which is the
+initiating event for bead formation; similar ball size but
+different morphology was found at different power settings.
+A simple scaling model by \citet{lindstrom2023simple} showed
+that the balling threshold can be expressed as a dimensionless
+number combining material properties, powder size, and substrate
+preheating, providing a rapid design tool for parameter
+selection. Most recently, \citet{taylor2025analytical} developed
+an analytical rivulet instability model accounting for substrate
+stabilization, and found that solidification and instability
+growth rates can be comparable — meaning balling is not a
+purely fluid instability but is shaped by the coupled
+thermal-fluid dynamics of the laser process. This body of
+work establishes the physical basis for our observation that
+balling wavelength is dominated by capillary effects rather than
+power-dependent thermal factors.
+
+\subsection{In-Situ Melt Pool Monitoring in LPBF}
+
+In-situ monitoring of the melt pool using optical cameras and
+photodiodes has become the principal approach for real-time
+quality control in LPBF. Early work by
+\citet{scime2018using} demonstrated that visible-light high-speed
+cameras can capture melt pool morphology signatures indicative
+of balling and keyholing in Inconel 718, and that unsupervised
+learning on scale-invariant morphology descriptors can
+differentiate between pool states without explicit labels.
+The same group later showed that multi-scale CNNs can
+autonomously detect powder spreading anomalies from layerwise
+images \citep{scime2018multiscale}.
+
+Camera-based approaches have since been extended to thermal
+imaging. \citet{baumgartl2020deep} used thermographic off-axis
+imaging combined with deep learning to detect delamination and
+spatter with 96.8\% accuracy, demonstrating that non-contact
+thermal sensing can complement visible-light cameras.
+\citet{snow2021toward} trained CNNs on layerwise imagery with
+X-ray CT as ground truth, achieving 93.5\% accuracy on large
+flaws ($> 200\,\mu$m) and demonstrating cross-build
+generalizability — an important practical requirement.
+\citet{cao2023monitoring} used photodiode signals converted
+to 2D images to classify single-track melting states into
+three categories with 95.8\% accuracy using CNN.
+
+For melt pool signal interpretation, \citet{reijonen2024effect}
+showed that shielding gas flow speed has a highly non-linear
+and direction-dependent effect on coaxial photodiode signals,
+demonstrating that the gas flow geometry directly influences
+what the sensor detects — a finding consistent with our
+discovery of the Left/Right detectability asymmetry from
+fixed-direction gas flow.
+
+\subsection{Gas Flow, Spatter, and Melt Pool Asymmetry}
+
+The interaction between shielding gas flow and the melt pool
+is a critical but underappreciated source of process asymmetry.
+\citet{esmaeilizadeh2018spatter} showed that spatter distribution
+on the powder bed is governed by the interaction of melt pool
+ejecta with the shielding gas flow field, and that surface
+roughness increases significantly in spatter-rich regions of
+the build plate — demonstrating spatial asymmetry driven by
+fixed gas flow direction. \citet{zhang2020simulation} developed
+a CFD model showing that the Coanda effect (gas flow tendency
+toward the substrate) significantly affects spatter removal
+patterns, with design-dependent spatial distributions.
+\citet{li2022review} reviewed spatter generation mechanisms
+and confirmed that spatter trajectory is governed jointly by
+recoil pressure, surface tension, and shielding gas direction
+— all of which are fixed relative to the scan direction.
+
+The melt pool dynamics are further asymmetrized by the scan
+direction. \citet{yuan2023revealing} showed through
+DEM-CFD simulations that powder spatter follows three distinct
+patterns (inward, upward, outward) depending on the relative
+orientation of the vapor flow and shielding gas, with the
+inward pattern specifically caused by shielding gas. This
+provides a simulation-level basis for the asymmetry observed
+in our experiments: the right (downwind) side of the track
+receives cross-contamination from ejecta carried by the gas
+flow, creating a more disturbed pool environment that produces
+stronger and more consistent camera signals.
+
+\subsection{Multi-Modal Sensor Fusion for Process Monitoring}
+
+Single-modality monitoring has well-documented limitations —
+no single sensor captures all relevant process phenomena.
+\citet{petrich2021multimodal} presented one of the most
+comprehensive multi-modal LPBF monitoring systems, fusing
+layerwise imagery, acoustic emission, multi-spectral emission,
+and scan vector data. Using neural networks on voxel-by-voxel
+predictions, they achieved 98.5\% accuracy for binary flaw
+classification with four-fold cross-validation, and showed
+through sensitivity analysis that while optical imagery carries
+the most information, additional modalities significantly improve
+classification performance — directly motivating multi-modal
+fusion.
+
+\citet{gaikwad2022multi} fused coaxial high-speed video with
+a temperature field imaging system, extracting physically
+interpretable melt pool signatures (temperature, shape, spatter
+intensity). The data fusion approach reduced false positive
+rates from $\sim 0.1$ to $\sim 0.001$ without sacrificing
+true positive rate, matching black-box deep learning approaches
+but with interpretable features.
+\citet{li2022convolutional} fused layerwise images, acoustic
+emission, and photodiode signals through CNN at data, feature,
+and decision levels, finding that feature-level fusion
+outperformed all single-sensor baselines for SLM quality
+monitoring. \citet{wu2024insitu} extended this to triple-sensor
+(camera, photodiode, microphone) fusion, achieving 97.98\%
+accuracy on high-quality samples.
+
+A broader review by \citet{chen2024insitu} identified multi-sensor
+fusion as the primary future direction for LPBF monitoring,
+noting the need for standardization, improved reliability,
+and decision-making strategies beyond early stopping. Our work
+contributes to this direction by introducing a new fusion
+modality — post-build surface profilometry — that has not
+previously been combined with in-situ camera monitoring for
+balling detection. Crucially, we show that this fusion is
+non-trivial: the two modalities are nearly uncorrelated
+($r \approx 0$), confirming they measure genuinely different
+physical phenomena.
+
+In-situ profilometry during the build process has also been
+studied. \citet{spurek2024effect} used in-situ laser
+profilometry to measure powder layer topography and correlate
+it with part density, while \citet{zhang2023machine} combined
+fringe projection profilometry with machine learning to measure
+layer surface topography at improved accuracy and resolution.
+Our work differs in using post-build profilometry as a
+complementary sensing modality fused with camera data at the
+frame level, rather than using in-situ profilometry as a
+standalone quality metric.
+
+\subsection{Deep Learning for Sequential Process Data}
+
+Temporal modeling of melt pool sequences requires architectures
+that can capture both spatial features within each frame and
+temporal dynamics across frames. CNNs excel at spatial feature
+extraction but treat each frame independently;
+LSTM networks capture sequential dependencies but require
+pre-extracted features as input. CNN-LSTM hybrid architectures
+combine both capabilities and have shown strong results in
+manufacturing anomaly detection. \citet{wang2020detecting}
+demonstrated that RNN-based models can detect anomalies in
+manufacturing time series by learning reconstruction errors
+from normal operation data, a paradigm applicable to melt pool
+monitoring. \citet{zhang2023machine} confirmed the utility of
+hybrid CNN-LSTM architectures for layer-level quality monitoring
+in polymer LPBF, achieving up to 99.7\% validation accuracy with
+lightweight models.
+
+In our work, the CNN-LSTM processes difference image sequences
+rather than raw frames, which reduces the model's task to
+detecting \emph{changes} in pool dynamics rather than absolute
+pool state. This is motivated by the observation that balling
+events manifest as transient perturbations — a brief disruption
+of steady-state pool behavior — which are more visible in
+frame differences than in raw images, particularly for lateral
+bead types where the perturbation is asymmetric and transient.
+
+\subsection{Vision-Language Models for Industrial Inspection}
+
+Large vision-language models (VLMs) have demonstrated strong
+zero-shot and few-shot generalization across visual tasks,
+raising the question of whether domain-specific training is
+necessary for defect detection. Recent work in industrial
+inspection has explored this question: \citet{jeong2023winclip}
+proposed WinCLIP, adapting CLIP for zero-shot anomaly detection
+through compositional text prompts and multi-scale patch
+features, achieving 91.8\% AUROC on MVTec-AD without any
+training. \citet{li2024fade} similarly adapted CLIP for
+few-shot industrial anomaly detection, significantly
+outperforming task-specific trained models in zero-shot
+settings. However, these methods target appearance-based
+industrial defects (surface scratches, texture anomalies)
+which differ substantially from the dynamic, temporal nature
+of melt pool balling.
+
+For domain-specific applications with highly specialized
+visual signatures, the performance gap between VLMs and
+task-trained models remains large. \citet{zhang2025seeing}
+demonstrated this in wind turbine blade inspection, where
+retrieval-augmented VLMs outperformed plain VLMs but the
+improvement depended critically on the quality of the
+retrieved domain context. The key challenge is that VLMs
+trained on natural image-text data lack the domain knowledge
+needed to interpret melt pool dynamics, spatter patterns,
+and the temporal evolution of pool perturbations.
+
+Our VLM evaluation confirms this picture for LPBF balling
+detection: zero-shot performance is competitive only on
+high-signal layers where the balling event is visually
+obvious, and adding few-shot examples from other process
+conditions \emph{hurts} performance because melt pool
+appearance is strongly process-condition-dependent. This
+directly parallels the finding of \citet{zhang2025seeing}
+that domain context must match the test condition to be
+helpful. The practical implication is that while VLMs may
+serve as a rapid assessment tool or provide interpretable
+outputs, task-trained models with explicit process parameter
+conditioning remain necessary for reliable balling detection
+across diverse process conditions. Future work with larger
+datasets of labeled melt pool sequences — potentially
+including fine-tuned VLMs or in-context learning with
+process-matched examples — could narrow this gap.
+
+\subsection{Positioning of This Work}
+
+This paper makes several contributions not addressed by
+prior work. First, existing melt pool monitoring approaches
+for balling detection \citep{scime2018using, cao2023monitoring}
+do not systematically analyze which bead categories are
+detectable and why; we provide this analysis and attribute
+the Left/Right detectability asymmetry to a specific physical
+mechanism (gas flow geometry) rather than treating it as
+a modeling artifact. Second, no prior work has fused
+post-build profilometry with in-situ camera data for
+balling detection; our multi-modal model is the first to
+demonstrate that these two modalities are complementary
+($r \approx 0$) and that fusion substantially improves
+detection of previously undetectable bead categories.
+Third, while multi-modal sensor fusion for LPBF monitoring
+has been studied \citep{petrich2021multimodal,gaikwad2022multi},
+prior work has fused co-temporal sensors (acoustic, optical,
+thermal all recorded during the build); our fusion of
+in-situ and post-build sensing introduces a new paradigm
+where ex-situ measurements guide in-situ detection.
+Finally, our process parameter ablation reveals that scan
+speed $V$ conditioning can hurt generalization through
+shortcut learning, a finding relevant to any model that
+conditions on binary or low-cardinality process parameters.
+\end{document}
