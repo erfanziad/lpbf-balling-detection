@@ -57,10 +57,6 @@ src/
 figures/
   generate_signal_figure.py        # Reproduces a2_signal_cohens_d.png (3-panel figure)
 
-docs/
-  balling_paper.tex                # Draft academic paper
-  literature_review.tex            # Related work section
-  references.bib                   # BibTeX references
 ```
 
 ---
